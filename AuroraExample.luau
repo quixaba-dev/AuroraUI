@@ -3,11 +3,15 @@
 	Works directly in a Roblox executor alongside Aurora.luau (or via loadstring).
 ]]
 
--- Option A: Load from URL in executor
--- local Aurora = loadstring(game:HttpGet("https://your-host/Aurora.luau"))()
-
--- Option B: Load local file in executor / workspace
-local Aurora = (loadfile and loadfile("Aurora.luau")()) or require(script.Parent.Aurora)
+-- Option A: Load local file if present, otherwise fetch from GitHub raw URL
+local Aurora
+if isfile and isfile("Aurora.luau") and loadfile then
+	Aurora = loadfile("Aurora.luau")()
+elseif game and game.HttpGet then
+	Aurora = loadstring(game:HttpGet("https://raw.githubusercontent.com/quixaba-dev/AuroraUI/master/Aurora.luau"))()
+else
+	Aurora = require(script.Parent.Aurora)
+end
 
 local Window = Aurora:CreateWindow({
 	Title = "Aurora Studio",
